@@ -1,0 +1,73 @@
+﻿<style type="text/css">
+    /* Prevent the text contents of draggable elements from being selectable. */
+    [draggable] {
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+        /* Required to make elements draggable in old WebKit */
+        -khtml-user-drag: element;
+        -webkit-user-drag: element;
+    }
+
+    .unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    }
+
+    .column {
+        height: 100%;
+        width: 33%;
+        float: left;
+        border: 2px solid #666666;
+        background-color: #ccc;
+        margin-right: 0px;
+        -webkit-border-radius: 10px;
+        -ms-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 3px #000;
+        -ms-box-shadow: inset 0 0 3px #000;
+        box-shadow: inset 0 0 3px #000;
+        text-align: left;
+        cursor: move;
+    }
+
+    .list{
+        list-style: none;
+    }
+
+    .item {
+        background: aqua;
+        border: 2px solid;
+        -moz-border-radius: 20px;
+        -webkit-border-radius: 20px;
+    }
+</style>
+<header>
+    <h1>Match Excel Columns to Table Columns</h1>
+</header>
+<body>
+    <section id="sectiondiv">
+        <div>
+            <div id="exceldiv" class="column">
+                <ul id="excelcolumns" class="excelcolumns list"></ul>
+            </div>
+            <div id="dropdiv" class="column">
+                <ul id="dropcolumns" class="dropcolumns list"></ul>
+            </div>
+            <div id="tablediv" class="column">
+                <ul id="tablecolumns" class="tablecolumns list"></ul>
+            </div>
+        </div>
+    </section>
+</body>
+<footer></footer>
+
+<div class="excelcolumns list" {clear:both;}></div>
+<div class="dropcolumns list" {clear:both;}></div>
+<div class="tablecolumns list" {clear:both;}></div>

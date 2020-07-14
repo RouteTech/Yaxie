@@ -1,0 +1,172 @@
+{
+  "RootNamespace": "Yaxie",
+  "ServerTypings": {
+    "Assemblies": [],
+    "LocalTexts": true
+  },
+  "Connections": [
+    {
+      "Key": "Default",
+      "Tables": [
+        {
+          "Tablename": "dbo.ImportSource",
+          "Identifier": "ImportSource",
+          "Module": "Common",
+          "PermissionKey": "Administration:General"
+        },
+        {
+          "Tablename": "dbo.ImportType",
+          "Identifier": "ImportType",
+          "Module": "Common",
+          "PermissionKey": "Administration:General"
+        },
+        {
+          "Tablename": "dbo.ImportWizard",
+          "Identifier": "ImportWizard",
+          "Module": "Common",
+          "PermissionKey": "Administration:General"
+        },
+        {
+          "Tablename": "dbo.Note",
+          "Identifier": "Note",
+          "Module": "Common",
+          "PermissionKey": "Administration:General"
+        }
+      ]
+    },
+    {
+      "Key": "NorthWind",
+      "Tables": [
+        {
+          "Tablename": "dbo.Categories",
+          "Identifier": "Categories",
+          "Module": "NorthWind",
+          "PermissionKey": "Administration:General"
+        },
+        {
+          "Tablename": "dbo.CategoryLang",
+          "Identifier": "CategoryLang",
+          "Module": "NorthWind",
+          "PermissionKey": "Administration:General"
+        },
+        {
+          "Tablename": "dbo.CustomerDetails",
+          "Identifier": "CustomerDetails",
+          "Module": "NorthWind",
+          "PermissionKey": "Administration:General"
+        },
+        {
+          "Tablename": "dbo.Customers",
+          "Identifier": "Customers",
+          "Module": "NorthWind",
+          "PermissionKey": "Administration:General"
+        },
+        {
+          "Tablename": "dbo.Employees",
+          "Identifier": "Employees",
+          "Module": "NorthWind",
+          "PermissionKey": "Administration:General"
+        },
+        {
+          "Tablename": "dbo.EmployeeTerritories",
+          "Identifier": "EmployeeTerritories",
+          "Module": "NorthWind",
+          "PermissionKey": "Administration:General"
+        },
+        {
+          "Tablename": "dbo.Invoices",
+          "Identifier": "Invoices",
+          "Module": "NorthWind",
+          "PermissionKey": "Administration:General"
+        },
+        {
+          "Tablename": "dbo.Notes",
+          "Identifier": "Notes",
+          "Module": "NorthWind",
+          "PermissionKey": "Administration:General"
+        },
+        {
+          "Tablename": "dbo.Order Details",
+          "Identifier": "OrderDetails",
+          "Module": "NorthWind",
+          "PermissionKey": "Administration:General"
+        },
+        {
+          "Tablename": "dbo.Orders",
+          "Identifier": "Orders",
+          "Module": "NorthWind",
+          "PermissionKey": "Administration:General"
+        },
+        {
+          "Tablename": "dbo.ProductLang",
+          "Identifier": "ProductLang",
+          "Module": "NorthWind",
+          "PermissionKey": "Administration:General"
+        },
+        {
+          "Tablename": "dbo.Products",
+          "Identifier": "Products",
+          "Module": "NorthWind",
+          "PermissionKey": "Administration:General"
+        },
+        {
+          "Tablename": "dbo.Products by Category",
+          "Identifier": "ProductsbyCategory",
+          "Module": "NorthWind",
+          "PermissionKey": "Administration:General"
+        },
+        {
+          "Tablename": "dbo.Region",
+          "Identifier": "Region",
+          "Module": "NorthWind",
+          "PermissionKey": "Administration:General"
+        },
+        {
+          "Tablename": "dbo.Shippers",
+          "Identifier": "Shippers",
+          "Module": "NorthWind",
+          "PermissionKey": "Administration:General"
+        },
+        {
+          "Tablename": "dbo.Suppliers",
+          "Identifier": "Suppliers",
+          "Module": "NorthWind",
+          "PermissionKey": "Administration:General"
+        },
+        {
+          "Tablename": "dbo.Territories",
+          "Identifier": "Territories",
+          "Module": "NorthWind",
+          "PermissionKey": "Administration:General"
+        }
+      ]
+    },
+    {
+      "Key": "Yaxie",
+      "Tables": [
+        {
+          "Tablename": "dbo.Customers",
+          "Identifier": "Customers",
+          "Module": "Customers",
+          "PermissionKey": "Administration:General"
+        },
+        {
+          "Tablename": "dbo.ImportType",
+          "Identifier": "ImportType",
+          "Module": "Common",
+          "PermissionKey": "Administration:General"
+        },
+        {
+          "Tablename": "dbo.ImportWizard",
+          "Identifier": "ImportWizard",
+          "Module": "Common",
+          "PermissionKey": "Administration:General"
+        }
+      ]
+    }
+  ],
+  "BaseRowClasses": [],
+  "RemoveForeignFields": [],
+  "CustomGenerate": {},
+  "CustomSettings": {}
+}

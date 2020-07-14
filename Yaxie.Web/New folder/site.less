@@ -1,0 +1,36 @@
+/* ToolDropdownButtonGenerator */
+.j-tool-dropdown-button {
+    &:hover {
+        background-color: unset !important;
+    }
+
+    .disabled {
+        cursor: default !important;
+    }
+
+    .dropdown-toggle {
+        .caret {
+            margin-left: 6px;
+            margin-right: 4px;
+        }
+    }
+
+    .dropdown-menu{
+        border-color: #ccc;
+    }
+    
+    .dropdown-menu li {
+        a {
+            /*padding: 5px 10px 5px 12px;*/
+            color: #333;
+            font-size: 13px;
+            font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+    }
+
+    .dropdown-menu li.disabled {
+        a, i {
+            color: gray !important;
+        }
+    }
+}

@@ -1,0 +1,2 @@
+﻿namespace Yaxie.Common {
+}
