@@ -14,10 +14,8 @@
         KeyColumn?: number;
         MatchOnLabels?: boolean;
         MatchOnFieldNames?: boolean;
-        ArchiveFolder?: string;
         SourceDirectory?: string;
         TargetDatabase?: string;
-        ErrorList?: string;
         ImportFileList?: string;
         FieldMatchList?: string;
         FieldMatchDisplay?: string;
@@ -54,10 +52,8 @@
             KeyColumn = "KeyColumn",
             MatchOnLabels = "MatchOnLabels",
             MatchOnFieldNames = "MatchOnFieldNames",
-            ArchiveFolder = "ArchiveFolder",
             SourceDirectory = "SourceDirectory",
             TargetDatabase = "TargetDatabase",
-            ErrorList = "ErrorList",
             ImportFileList = "ImportFileList",
             FieldMatchList = "FieldMatchList",
             FieldMatchDisplay = "FieldMatchDisplay",

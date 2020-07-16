@@ -135,13 +135,6 @@ namespace Yaxie.Common.Entities
             set { Fields.MatchOnFieldNames[this] = value; }
         }
 
-        [DisplayName("Archive Folder"), Size(255)]
-        public String ArchiveFolder
-        {
-            get { return Fields.ArchiveFolder[this]; }
-            set { Fields.ArchiveFolder[this] = value; }
-        }
-
         [DisplayName("Source Directory"), Size(255)]
         public String SourceDirectory
         {
@@ -155,13 +148,6 @@ namespace Yaxie.Common.Entities
         {
             get { return Fields.TargetDatabase[this]; }
             set { Fields.TargetDatabase[this] = value; }
-        }
-
-        [DisplayName("Error List")]
-        public String ErrorList
-        {
-            get { return Fields.ErrorList[this]; }
-            set { Fields.ErrorList[this] = value; }
         }
 
         [DisplayName("Import File List")]
@@ -228,10 +214,8 @@ namespace Yaxie.Common.Entities
             public Int32Field KeyColumn;
             public BooleanField MatchOnLabels;
             public BooleanField MatchOnFieldNames;
-            public StringField ArchiveFolder;
             public StringField SourceDirectory;
             public StringField TargetDatabase;
-            public StringField ErrorList;
             public StringField ImportFileList;
 
             public StringField FieldMatchList;

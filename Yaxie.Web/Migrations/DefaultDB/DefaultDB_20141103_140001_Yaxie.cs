@@ -45,12 +45,22 @@ namespace Yaxie.Migrations.DefaultDB
                 .WithColumn("KeyColumn").AsInt32().Nullable()
                 .WithColumn("MatchOnLabels").AsBoolean().NotNullable()
                 .WithColumn("MatchOnFieldNames").AsBoolean().NotNullable()
-                .WithColumn("ArchiveFolder").AsString(MigrationConstants.PathLength).Nullable()
                 .WithColumn("SourceDirectory").AsString(MigrationConstants.PathLength).Nullable()
                 .WithColumn("TargetDatabase").AsString(MigrationConstants.PathLength).NotNullable()
-                .WithColumn("ErrorList").AsString(Int32.MaxValue).Nullable()
                 .WithColumn("ImportFileList").AsString(Int32.MaxValue).Nullable()
                 .WithColumn("NoteId").AsInt32().Nullable();
+
+            Create.Table("ImportWizardHistory").InSchema("dbo")
+                .WithColumn("ImportWizardHistoryId").AsInt32().Identity().NotNullable().PrimaryKey()
+                .WithColumn("ImportWizardId").AsInt32().Nullable()
+                    .ForeignKey("ImportWizard", "ImportWizardId")
+                .WithColumn("RunDateTime").AsDateTime().NotNullable()
+                .WithColumn("OriginalFileName").AsString(Int32.MaxValue).NotNullable()
+                .WithColumn("TempFileName").AsString(Int32.MaxValue).NotNullable()
+                .WithColumn("ErrorList").AsString(Int32.MaxValue).Nullable()
+                .WithColumn("Results").AsString(Int32.MaxValue).Nullable()
+                .WithColumn("RowsInserted").AsInt32().NotNullable().WithDefaultValue(0)
+                .WithColumn("RowsUpdated").AsInt32().NotNullable().WithDefaultValue(0);
 
             InsertImportTypes();
         }

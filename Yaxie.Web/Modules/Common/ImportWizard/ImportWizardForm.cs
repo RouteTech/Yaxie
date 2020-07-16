@@ -19,6 +19,7 @@ namespace Yaxie.Common.Forms
         public String Description { get; set; }
         public Int32 ImportTypeId { get; set; }
         public String TargetDatabase { get; set; }
+        [Required]
         public String[] ImportFileList { get; set; }
         [HalfWidth]
         public Int32 StartAtRow { get; set; }
@@ -44,11 +45,10 @@ namespace Yaxie.Common.Forms
         public String[] FieldMatchDisplay { get; set; }
         [Visible(false)]
         public String[] FieldMatchList { get; set; }
-        public String ArchiveFolder { get; set; }
         [Visible(false)]
         public String SourceDirectory { get; set; }
         public DateTime LastRunDate { get; set; }
-        [TextAreaEditor(Rows = 5)]
-        public String[] ErrorList { get; set; }
+        //[TextAreaEditor(Rows = 5)]
+        //public String[] ErrorList { get; set; }
     }
 }

@@ -8116,6 +8116,12 @@ section.content > .s-DataGrid {
 .s-Common-ImportSourceDialog .caption {
   width: 150px;
 }
+.s-Common-ImportWizardHistoryDialog > .size {
+  width: 650px;
+}
+.s-Common-ImportWizardHistoryDialog .caption {
+  width: 150px;
+}
 .s-Customers-CustomersDialog > .size {
   width: 650px;
 }
@@ -8630,5 +8636,11 @@ section.content > .s-DataGrid {
   width: 650px;
 }
 .s-NorthWind-TerritoriesDialog .caption {
+  width: 150px;
+}
+.s-Default-ImportWizardHistoryDialog > .size {
+  width: 650px;
+}
+.s-Default-ImportWizardHistoryDialog .caption {
   width: 150px;
 }

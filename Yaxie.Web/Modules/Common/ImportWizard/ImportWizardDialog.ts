@@ -15,16 +15,21 @@ namespace Yaxie.Common {
         protected getUpdatePermission() { return ImportWizardRow.updatePermission; }
 
         protected form = new ImportWizardForm(this.idPrefix);
+        private historyGrid: ImportWizardImportWizardHistoryGrid;
+        public ImportWizardId: number;
         protected ImportFile: string;
-
         private loadedState: string;
 
         constructor() {
             super();
+            this.historyGrid = new ImportWizardImportWizardHistoryGrid(this.byId("HistoryGrid"));
+            this.historyGrid.element.flexHeightOnly(1);
+
             $('<a class="inplace-button inplace-action"><b><i class="fa fa-magic text-red"></i></b></a>')
                 .attr("title", "Match Excel Columns to Table Columns")
                 .insertBefore(this.form.FieldMatchDisplay.element)
                 .click(e => {
+
                     var excelColumnList = [];
                     var dropColumnList = [];
                     var tableColumnList = [];
@@ -65,15 +70,17 @@ namespace Yaxie.Common {
                             var fieldMatchDisplay = response.FieldMatchDisplay;
                             for (var i = 0; i < fieldMatchDisplay.length; i++) {
                                 this.form.FieldMatchDisplay.value = this.form.FieldMatchDisplay.value + fieldMatchDisplay[i] + "\n";
-                                }
-                                this.form.FieldMatchList.value = fieldMatchJson;
+                            }
+                            this.form.FieldMatchList.value = fieldMatchJson;
                         },
                             {
                                 async: false
                             });
                         dialog = null;
                     });
-                    dialog.dialogOpen();
+                    if (excelColumnList && excelColumnList.length > 0) {
+                        dialog.dialogOpen();
+                    }
                 });
 
             this.tabs.on('tabsactivate', (e, i) => {
@@ -95,7 +102,7 @@ namespace Yaxie.Common {
                         Q.alert("You must enter a valid file name before you can import it.")
                     }
                     Common.ImportWizardService.ExcelImport({
-                        ImportWizardID: this.getWizardID()
+                        ImportWizardId: this.getWizardID()
                     }, response => {
                         this.dialogClose();
                     });
@@ -115,6 +122,18 @@ namespace Yaxie.Common {
             catch (e) {
                 return null;
             }
+        }
+
+        loadResponse(data) {
+            super.loadResponse(data);
+            this.loadedState = this.getSaveState();
+        }
+
+        loadEntity(entity: ImportWizardRow) {
+            super.loadEntity(entity);
+            Serenity.TabsExtensions.setDisabled(this.tabs, 'History', this.isNewOrDeleted());
+
+            this.historyGrid.ImportWizardId = entity.ImportWizardId;
         }
     }
 }

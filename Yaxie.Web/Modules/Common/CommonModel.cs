@@ -3,6 +3,7 @@ using Serenity.Data;
 using Serenity.Services;
 using System;
 using System.Collections.Generic;
+using Yaxie.Common.Entities;
 
 namespace Yaxie.Common
 {
@@ -32,6 +33,21 @@ namespace Yaxie.Common
         public List<string> FieldMatchDisplay { get; set; }
     }
 
+    public class ImportWizardBulkActionResponse : ServiceResponse
+    {
+        public List<ImportWizardRow> ImportWizardList { get; set; }
+        public List<string> MessageList { get; set; }
+
+    }
+
+    public class ImportWizardBulkActionRequest : ServiceRequest
+    {
+        public List<Int32> ImportWizardIdList { get; set; }
+    }
+    #endregion
+
+    #region Classes
+
     //[{"OriginalName":"Import.xlsx","Filename":"temporary/83f30bbffc9f4872b8d8277489447d5c.xlsx"}]
     public class UploadFileNames
     {
@@ -60,6 +76,7 @@ namespace Yaxie.Common
         public string TableFieldName { get; set; }
         public Type TableFieldType { get; set; }
     }
+
 
     #endregion
 }

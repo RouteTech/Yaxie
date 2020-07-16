@@ -56,7 +56,7 @@ namespace Yaxie
 
                 public static class Login
                 {
-                    public static LocalText FormTitle = "Welcome to SERENE (Serenity Application Template)";
+                    public static LocalText FormTitle = "Welcome to Yaxie (Yet Another eXcel Importer Exporter)";
                     public static LocalText SignInButton = "Sign In";
                     public static LocalText ForgotPassword = "Forgot password?";
                     public static LocalText SignUpButton = "Register a new account";
@@ -109,8 +109,8 @@ namespace Yaxie
             public static class Dashboard
             {
                 public static LocalText ContentDescription =
-                    "a sample with random data (from free <em><a href = \"https://almsaeedstudio.com/\" target= \"_blank\">" +
-                    "AdminLTE theme</a></em>)";
+                    "Yet Another eXcel Importer Exporter <a href = \"https://github.com/RouteTech/Yaxie\" target= \"_blank\">" +
+                    " </a>)";
             }
 
             public static class BasicProgressDialog
@@ -160,8 +160,8 @@ namespace Yaxie
 
             public static class Layout
             {
-                public static LocalText FooterCopyright = "Copyright (c) 2015.";
-                public static LocalText FooterInfo = "Serenity Platform";
+                public static LocalText FooterCopyright = "Copyright (c) 2020.";
+                public static LocalText FooterInfo = "www.routetech.com";
                 public static LocalText FooterRights = "All rights reserved.";
                 public static LocalText GeneralSettings = "General Settings";
                 public static LocalText Language = "Language";

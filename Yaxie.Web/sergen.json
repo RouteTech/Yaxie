@@ -27,6 +27,12 @@
           "PermissionKey": "Administration:General"
         },
         {
+          "Tablename": "dbo.ImportWizardHistory",
+          "Identifier": "ImportWizardHistory",
+          "Module": "Common",
+          "PermissionKey": "Administration:General"
+        },
+        {
           "Tablename": "dbo.Note",
           "Identifier": "Note",
           "Module": "Common",

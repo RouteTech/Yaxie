@@ -17,10 +17,8 @@
         MatchOnFieldNames: Serenity.BooleanEditor;
         FieldMatchDisplay: Serenity.TextAreaEditor;
         FieldMatchList: Serenity.StringEditor;
-        ArchiveFolder: Serenity.StringEditor;
         SourceDirectory: Serenity.StringEditor;
         LastRunDate: Serenity.DateTimeEditor;
-        ErrorList: Serenity.TextAreaEditor;
     }
 
     export class ImportWizardForm extends Serenity.PrefixedContext {
@@ -61,10 +59,8 @@
                     'MatchOnFieldNames', w5,
                     'FieldMatchDisplay', w6,
                     'FieldMatchList', w1,
-                    'ArchiveFolder', w1,
                     'SourceDirectory', w1,
-                    'LastRunDate', w7,
-                    'ErrorList', w6
+                    'LastRunDate', w7
                 ]);
             }
         }

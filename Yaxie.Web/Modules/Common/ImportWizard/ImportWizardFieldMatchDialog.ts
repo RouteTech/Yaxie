@@ -22,6 +22,9 @@ namespace Yaxie.Common
             super();
 
             this.excelColumnList = ExcelColumnList
+            if (this.excelColumnList.length == 0) {
+                return;
+            }
             this.tableColumnList = TableColumnList;            
 
         }        

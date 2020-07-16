@@ -56,6 +56,11 @@ namespace MVC
                 public const string ImportWizardIndex = "~/Modules/Common/ImportWizard/ImportWizardIndex.cshtml";
             }
 
+            public static class ImportWizardHistory
+            {
+                public const string ImportWizardHistoryIndex = "~/Modules/Common/ImportWizardHistory/ImportWizardHistoryIndex.cshtml";
+            }
+
             public static class Note
             {
                 public const string NoteIndex = "~/Modules/Common/Note/NoteIndex.cshtml";

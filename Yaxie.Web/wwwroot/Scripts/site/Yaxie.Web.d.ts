@@ -552,6 +552,17 @@ declare namespace Yaxie.Common {
     }
 }
 declare namespace Yaxie.Common {
+    interface ImportWizardBulkActionRequest extends Serenity.ServiceRequest {
+        ImportWizardIdList?: number[];
+    }
+}
+declare namespace Yaxie.Common {
+    interface ImportWizardBulkActionResponse extends Serenity.ServiceResponse {
+        ImportWizardList?: ImportWizardRow[];
+        MessageList?: string[];
+    }
+}
+declare namespace Yaxie.Common {
 }
 declare namespace Yaxie.Common {
     interface ImportWizardForm {
@@ -572,15 +583,120 @@ declare namespace Yaxie.Common {
         MatchOnFieldNames: Serenity.BooleanEditor;
         FieldMatchDisplay: Serenity.TextAreaEditor;
         FieldMatchList: Serenity.StringEditor;
-        ArchiveFolder: Serenity.StringEditor;
         SourceDirectory: Serenity.StringEditor;
         LastRunDate: Serenity.DateTimeEditor;
-        ErrorList: Serenity.TextAreaEditor;
     }
     class ImportWizardForm extends Serenity.PrefixedContext {
         static formKey: string;
         private static init;
         constructor(prefix: string);
+    }
+}
+declare namespace Yaxie.Common {
+}
+declare namespace Yaxie.Common {
+    interface ImportWizardHistoryForm {
+        ImportWizardId: Serenity.IntegerEditor;
+        RunDateTime: Serenity.DateEditor;
+        OriginalFileName: Serenity.StringEditor;
+        TempFileName: Serenity.StringEditor;
+        ErrorList: Serenity.TextAreaEditor;
+        Results: Serenity.TextAreaEditor;
+        RowsInserted: Serenity.IntegerEditor;
+        RowsUpdated: Serenity.IntegerEditor;
+    }
+    class ImportWizardHistoryForm extends Serenity.PrefixedContext {
+        static formKey: string;
+        private static init;
+        constructor(prefix: string);
+    }
+}
+declare namespace Yaxie.Common {
+    interface ImportWizardHistoryRow {
+        ImportWizardHistoryId?: number;
+        ImportWizardId?: number;
+        RunDateTime?: string;
+        OriginalFileName?: string;
+        TempFileName?: string;
+        ErrorList?: string;
+        Results?: string;
+        RowsInserted?: number;
+        RowsUpdated?: number;
+        ImportWizardImportTypeId?: number;
+        ImportWizardImportSourceId?: number;
+        ImportWizardDescription?: string;
+        ImportWizardLastRunDate?: string;
+        ImportWizardFieldMatchList?: string;
+        ImportWizardFieldMatchDisplay?: string;
+        ImportWizardFieldDelimiterId?: number;
+        ImportWizardStartAtRow?: number;
+        ImportWizardEndAtRow?: number;
+        ImportWizardRowErrorCount?: number;
+        ImportWizardColumnErrorCount?: number;
+        ImportWizardKeyType?: string;
+        ImportWizardKeyColumn?: number;
+        ImportWizardMatchOnLabels?: boolean;
+        ImportWizardMatchOnFieldNames?: boolean;
+        ImportWizardSourceDirectory?: string;
+        ImportWizardTargetDatabase?: string;
+        ImportWizardImportFileList?: string;
+        ImportWizardNoteId?: number;
+    }
+    namespace ImportWizardHistoryRow {
+        const idProperty = "ImportWizardHistoryId";
+        const nameProperty = "OriginalFileName";
+        const localTextPrefix = "Common.ImportWizardHistory";
+        const deletePermission = "Administration:General";
+        const insertPermission = "Administration:General";
+        const readPermission = "Administration:General";
+        const updatePermission = "Administration:General";
+        const enum Fields {
+            ImportWizardHistoryId = "ImportWizardHistoryId",
+            ImportWizardId = "ImportWizardId",
+            RunDateTime = "RunDateTime",
+            OriginalFileName = "OriginalFileName",
+            TempFileName = "TempFileName",
+            ErrorList = "ErrorList",
+            Results = "Results",
+            RowsInserted = "RowsInserted",
+            RowsUpdated = "RowsUpdated",
+            ImportWizardImportTypeId = "ImportWizardImportTypeId",
+            ImportWizardImportSourceId = "ImportWizardImportSourceId",
+            ImportWizardDescription = "ImportWizardDescription",
+            ImportWizardLastRunDate = "ImportWizardLastRunDate",
+            ImportWizardFieldMatchList = "ImportWizardFieldMatchList",
+            ImportWizardFieldMatchDisplay = "ImportWizardFieldMatchDisplay",
+            ImportWizardFieldDelimiterId = "ImportWizardFieldDelimiterId",
+            ImportWizardStartAtRow = "ImportWizardStartAtRow",
+            ImportWizardEndAtRow = "ImportWizardEndAtRow",
+            ImportWizardRowErrorCount = "ImportWizardRowErrorCount",
+            ImportWizardColumnErrorCount = "ImportWizardColumnErrorCount",
+            ImportWizardKeyType = "ImportWizardKeyType",
+            ImportWizardKeyColumn = "ImportWizardKeyColumn",
+            ImportWizardMatchOnLabels = "ImportWizardMatchOnLabels",
+            ImportWizardMatchOnFieldNames = "ImportWizardMatchOnFieldNames",
+            ImportWizardSourceDirectory = "ImportWizardSourceDirectory",
+            ImportWizardTargetDatabase = "ImportWizardTargetDatabase",
+            ImportWizardImportFileList = "ImportWizardImportFileList",
+            ImportWizardNoteId = "ImportWizardNoteId"
+        }
+    }
+}
+declare namespace Yaxie.Common {
+    namespace ImportWizardHistoryService {
+        const baseUrl = "Common/ImportWizardHistory";
+        function Create(request: Serenity.SaveRequest<ImportWizardHistoryRow>, onSuccess?: (response: Serenity.SaveResponse) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
+        function Update(request: Serenity.SaveRequest<ImportWizardHistoryRow>, onSuccess?: (response: Serenity.SaveResponse) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
+        function Delete(request: Serenity.DeleteRequest, onSuccess?: (response: Serenity.DeleteResponse) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
+        function Retrieve(request: Serenity.RetrieveRequest, onSuccess?: (response: Serenity.RetrieveResponse<ImportWizardHistoryRow>) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
+        function List(request: Serenity.ListRequest, onSuccess?: (response: Serenity.ListResponse<ImportWizardHistoryRow>) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
+        const enum Methods {
+            Create = "Common/ImportWizardHistory/Create",
+            Update = "Common/ImportWizardHistory/Update",
+            Delete = "Common/ImportWizardHistory/Delete",
+            Retrieve = "Common/ImportWizardHistory/Retrieve",
+            List = "Common/ImportWizardHistory/List"
+        }
     }
 }
 declare namespace Yaxie.Common {
@@ -599,10 +715,8 @@ declare namespace Yaxie.Common {
         KeyColumn?: number;
         MatchOnLabels?: boolean;
         MatchOnFieldNames?: boolean;
-        ArchiveFolder?: string;
         SourceDirectory?: string;
         TargetDatabase?: string;
-        ErrorList?: string;
         ImportFileList?: string;
         FieldMatchList?: string;
         FieldMatchDisplay?: string;
@@ -634,10 +748,8 @@ declare namespace Yaxie.Common {
             KeyColumn = "KeyColumn",
             MatchOnLabels = "MatchOnLabels",
             MatchOnFieldNames = "MatchOnFieldNames",
-            ArchiveFolder = "ArchiveFolder",
             SourceDirectory = "SourceDirectory",
             TargetDatabase = "TargetDatabase",
-            ErrorList = "ErrorList",
             ImportFileList = "ImportFileList",
             FieldMatchList = "FieldMatchList",
             FieldMatchDisplay = "FieldMatchDisplay",
@@ -654,16 +766,18 @@ declare namespace Yaxie.Common {
         function Delete(request: Serenity.DeleteRequest, onSuccess?: (response: Serenity.DeleteResponse) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
         function Retrieve(request: Serenity.RetrieveRequest, onSuccess?: (response: Serenity.RetrieveResponse<ImportWizardRow>) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
         function List(request: Serenity.ListRequest, onSuccess?: (response: Serenity.ListResponse<ImportWizardRow>) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
+        function ImportWizardBulkAction(request: ImportWizardBulkActionRequest, onSuccess?: (response: ImportWizardBulkActionResponse) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
         function GetTableHeaders(request: GetTableHeaderListRequest, onSuccess?: (response: Serenity.ListResponse<TableFieldInfo>) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
         function GetExcelColumnList(request: GetExcelColumnListRequest, onSuccess?: (response: Serenity.ListResponse<string>) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
         function SerializeList(request: SerializeListRequest, onSuccess?: (response: SerializeListResponse) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
-        function ExcelImport(request: ExcelImportRequest, onSuccess?: (response: ExcelImportResponse) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
+        function ExcelImport(request: ImportWizardRow, onSuccess?: (response: ImportWizardHistoryRow) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
         const enum Methods {
             Create = "Common/ImportWizard/Create",
             Update = "Common/ImportWizard/Update",
             Delete = "Common/ImportWizard/Delete",
             Retrieve = "Common/ImportWizard/Retrieve",
             List = "Common/ImportWizard/List",
+            ImportWizardBulkAction = "Common/ImportWizard/ImportWizardBulkAction",
             GetTableHeaders = "Common/ImportWizard/GetTableHeaders",
             GetExcelColumnList = "Common/ImportWizard/GetExcelColumnList",
             SerializeList = "Common/ImportWizard/SerializeList",
@@ -2701,6 +2815,24 @@ declare namespace Yaxie.Common {
     }
 }
 declare namespace Yaxie.Common {
+    class ImportWizardBulkAction extends Common.BulkServiceAction {
+        /**
+         * This controls how many service requests will be used in parallel.
+         * Determine this number based on how many requests your server
+         * might be able to handle, and amount of wait on external resources.
+         */
+        protected getParallelRequests(): number;
+        /**
+         * These number of records IDs will be sent to your service in one
+         * service call. If your service is designed to handle one record only,
+         * set it to 1. But note that, if you have 5000 records, this will
+         * result in 5000 service calls / requests.
+         */
+        protected getBatchSize(): number;
+        protected executeForBatch(batch: any): void;
+    }
+}
+declare namespace Yaxie.Common {
     class ImportWizardDialog extends Serenity.EntityDialog<ImportWizardRow, any> {
         protected getFormKey(): string;
         protected getIdProperty(): string;
@@ -2711,12 +2843,16 @@ declare namespace Yaxie.Common {
         protected getInsertPermission(): string;
         protected getUpdatePermission(): string;
         protected form: ImportWizardForm;
+        private historyGrid;
+        ImportWizardId: number;
         protected ImportFile: string;
         private loadedState;
         constructor();
         protected getToolbarButtons(): Serenity.ToolButton[];
         protected getWizardID(): number;
         getSaveState(): string;
+        loadResponse(data: any): void;
+        loadEntity(entity: ImportWizardRow): void;
     }
 }
 declare namespace Yaxie.Common {
@@ -2752,7 +2888,56 @@ declare namespace Yaxie.Common {
         protected getInsertPermission(): string;
         protected getLocalTextPrefix(): string;
         protected getService(): string;
+        private rowSelection;
         constructor(container: JQuery);
+        protected createToolbarExtensions(): void;
+        protected getButtons(): Serenity.ToolButton[];
+        protected getColumns(): Slick.Column[];
+        protected getViewOptions(): Slick.RemoteViewOptions;
+    }
+}
+declare namespace Yaxie.Common {
+    class ImportWizardHistoryDialog extends Serenity.EntityDialog<ImportWizardHistoryRow, any> {
+        protected getFormKey(): string;
+        protected getIdProperty(): string;
+        protected getLocalTextPrefix(): string;
+        protected getNameProperty(): string;
+        protected getService(): string;
+        protected getDeletePermission(): string;
+        protected getInsertPermission(): string;
+        protected getUpdatePermission(): string;
+        protected form: ImportWizardHistoryForm;
+    }
+}
+declare namespace Yaxie.Common {
+    class ImportWizardImportWizardHistoryDialog extends ImportWizardHistoryDialog {
+        constructor();
+        updateInterface(): void;
+    }
+}
+declare namespace Yaxie.Common {
+    class ImportWizardHistoryGrid extends Serenity.EntityGrid<ImportWizardHistoryRow, any> {
+        protected getColumnsKey(): string;
+        protected getDialogType(): typeof ImportWizardHistoryDialog;
+        protected getIdProperty(): string;
+        protected getInsertPermission(): string;
+        protected getLocalTextPrefix(): string;
+        protected getService(): string;
+        constructor(container: JQuery);
+    }
+}
+declare namespace Yaxie.Common {
+    class ImportWizardImportWizardHistoryGrid extends ImportWizardHistoryGrid {
+        protected getDialogType(): typeof ImportWizardImportWizardHistoryDialog;
+        constructor(container: JQuery);
+        protected getColumns(): Slick.Column[];
+        protected initEntityDialog(itemType: any, dialog: any): void;
+        protected addButtonClick(): void;
+        protected getInitialTitle(): any;
+        protected getGridCanLoad(): boolean;
+        private _importWizardId;
+        get ImportWizardId(): number;
+        set ImportWizardId(value: number);
     }
 }
 declare namespace Yaxie.Common {

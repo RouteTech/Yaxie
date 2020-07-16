@@ -18,6 +18,5 @@ namespace Yaxie.Common.Columns
         public String ImportTypeDescription { get; set; }
         [EditLink]
         public String Description { get; set; }
-        public DateTime LastRunDate { get; set; }
     }
 }
