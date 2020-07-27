@@ -444,6 +444,14 @@ declare namespace Yaxie.Common {
     interface GetExcelColumnListRequest extends Serenity.ListRequest {
         ImportFileList?: UploadFileNames[];
         FileName?: string;
+        SampleRecords?: number;
+    }
+}
+declare namespace Yaxie.Common {
+    interface GetExcelColumnListResponse extends Serenity.ServiceResponse {
+        SampleDataHTML?: string;
+        ExcelColumnList?: string[];
+        SampleDataList?: string[];
     }
 }
 declare namespace Yaxie.Common {
@@ -558,7 +566,7 @@ declare namespace Yaxie.Common {
 }
 declare namespace Yaxie.Common {
     interface ImportWizardBulkActionResponse extends Serenity.ServiceResponse {
-        ImportWizardList?: ImportWizardRow[];
+        ImportWizardHistoryList?: number[];
         MessageList?: string[];
     }
 }
@@ -597,7 +605,6 @@ declare namespace Yaxie.Common {
 declare namespace Yaxie.Common {
     interface ImportWizardHistoryForm {
         ImportWizardId: Serenity.IntegerEditor;
-        RunDateTime: Serenity.DateEditor;
         OriginalFileName: Serenity.StringEditor;
         TempFileName: Serenity.StringEditor;
         ErrorList: Serenity.TextAreaEditor;
@@ -768,9 +775,8 @@ declare namespace Yaxie.Common {
         function List(request: Serenity.ListRequest, onSuccess?: (response: Serenity.ListResponse<ImportWizardRow>) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
         function ImportWizardBulkAction(request: ImportWizardBulkActionRequest, onSuccess?: (response: ImportWizardBulkActionResponse) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
         function GetTableHeaders(request: GetTableHeaderListRequest, onSuccess?: (response: Serenity.ListResponse<TableFieldInfo>) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
-        function GetExcelColumnList(request: GetExcelColumnListRequest, onSuccess?: (response: Serenity.ListResponse<string>) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
+        function GetExcelColumnList(request: GetExcelColumnListRequest, onSuccess?: (response: GetExcelColumnListResponse) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
         function SerializeList(request: SerializeListRequest, onSuccess?: (response: SerializeListResponse) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
-        function ExcelImport(request: ImportWizardRow, onSuccess?: (response: ImportWizardHistoryRow) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
         const enum Methods {
             Create = "Common/ImportWizard/Create",
             Update = "Common/ImportWizard/Update",
@@ -780,8 +786,7 @@ declare namespace Yaxie.Common {
             ImportWizardBulkAction = "Common/ImportWizard/ImportWizardBulkAction",
             GetTableHeaders = "Common/ImportWizard/GetTableHeaders",
             GetExcelColumnList = "Common/ImportWizard/GetExcelColumnList",
-            SerializeList = "Common/ImportWizard/SerializeList",
-            ExcelImport = "Common/ImportWizard/ExcelImport"
+            SerializeList = "Common/ImportWizard/SerializeList"
         }
     }
 }
@@ -2863,8 +2868,9 @@ declare namespace Yaxie.Common {
         excelColumnList: any[];
         tableColumnList: any[];
         dropColumnList: any[];
+        sampleDataList: any[];
         matchList: any[];
-        constructor(ExcelColumnList: any, TableColumnList: any);
+        constructor(ExcelColumnList: any, TableColumnList: any, SampleDataList: any);
         protected onDialogOpen(): void;
         protected arrange(): void;
         protected getDialogOptions(): JQueryUI.DialogOptions;
@@ -2938,6 +2944,25 @@ declare namespace Yaxie.Common {
         private _importWizardId;
         get ImportWizardId(): number;
         set ImportWizardId(value: number);
+    }
+}
+declare namespace Yaxie.Common {
+    class ImportWizardSampleDataDialog extends Serenity.TemplatedDialog<any> {
+        data: any;
+        constructor(data: any);
+        protected onDialogOpen(): void;
+        protected arrange(): void;
+        protected getDialogOptions(): JQueryUI.DialogOptions;
+    }
+}
+declare namespace Yaxie.Common {
+    class ImportWizardSampleDataGrid extends Serenity.EntityGrid<ImportWizardRow, any> {
+        protected getColumnsKey(): string;
+        protected getDialogType(): typeof ImportWizardDialog;
+        protected getIdProperty(): string;
+        protected getLocalTextPrefix(): string;
+        protected getService(): string;
+        constructor(container: JQuery);
     }
 }
 declare namespace Yaxie.Common {

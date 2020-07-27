@@ -6,6 +6,7 @@ namespace Yaxie.Common.Repositories
     using Serenity.Services;
     using System;
     using System.Data;
+    using Yaxie.Common.Entities;
     using MyRow = Entities.ImportWizardHistoryRow;
 
     public class ImportWizardHistoryRepository
@@ -14,6 +15,13 @@ namespace Yaxie.Common.Repositories
 
         public SaveResponse Create(IUnitOfWork uow, SaveRequest<MyRow> request)
         {
+            //SaveResponse saveResponse = new MySaveHandler().Process(uow, request, SaveRequestType.Create);
+            //int importWizardId = (int)request.Entity.ImportWizardId;
+            //using var connection = SqlConnections.NewFor<ImportWizardRow>();
+            //ImportWizardRow importWizardRow = connection.TryById<ImportWizardRow>(importWizardId);
+            //importWizardRow.LastRunDate = DateTime.Now;
+            //connection.UpdateById(importWizardRow);
+            //return saveResponse;
             return new MySaveHandler().Process(uow, request, SaveRequestType.Create);
         }
 

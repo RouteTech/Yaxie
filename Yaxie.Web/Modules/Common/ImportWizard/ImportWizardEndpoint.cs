@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using OfficeOpenXml;
+using OfficeOpenXml.Table;
 using Serenity;
 using Serenity.Data;
+using Serenity.Data.Mapping;
 using Serenity.Services;
 using Serenity.Web;
 using System;
@@ -62,13 +64,11 @@ namespace Yaxie.Common.Endpoints
             request.CheckNotNull();
             ImportWizardBulkActionResponse response = new ImportWizardBulkActionResponse
             {
-                ImportWizardList = new List<ImportWizardRow>()
+                ImportWizardHistoryList = new List<int>()
             };
             foreach (var importWizardId in request.ImportWizardIdList)
             {
-                ImportWizardRow importWizardRow = uow.Connection.TryById<ImportWizardRow>(importWizardId);
-                var results = ExcelImport(importWizardRow);
-                //response.ImportWizardHistoryList.Add());
+                response.ImportWizardHistoryList = ExcelImport(importWizardId);
             }
             return response;
         }
@@ -82,8 +82,8 @@ namespace Yaxie.Common.Endpoints
             Type rowType = Type.GetType(entityName);
             if (rowType == null)
                 throw new ArgumentOutOfRangeException("Table not found");
-            var LocalServers = GetLocalSqlServerInstanceNames();
-            var RemoteServers = GetRemoteSqlServerInstanceNames();
+            //var LocalServers = GetLocalSqlServerInstanceNames();
+            //var RemoteServers = GetRemoteSqlServerInstanceNames();
             Row tableRow = (Row)Activator.CreateInstance(rowType);
             var tableFields = tableRow.GetTableFields().ToList();
             List<TableFieldInfo> tableFieldInfoList = new List<TableFieldInfo>();
@@ -102,9 +102,9 @@ namespace Yaxie.Common.Endpoints
         }       
 
         [HttpPost]
-        public ListResponse<string> GetExcelColumnList(GetExcelColumnListRequest request)
+        public GetExcelColumnListResponse GetExcelColumnList(GetExcelColumnListRequest request)
         {
-            ListResponse<string> response = new ListResponse<string>();
+            GetExcelColumnListResponse response = new GetExcelColumnListResponse();
             if (request != null && request.ImportFileList.Count > 0)
             {
                 string fileName = request.ImportFileList[0].Filename;
@@ -129,10 +129,45 @@ namespace Yaxie.Common.Endpoints
                         excelColumnList.Add(columnName.ToString());
                     }
                 }
-                response.Entities = excelColumnList;
+                response.ExcelColumnList = excelColumnList;
+                if (request.SampleRecords > 0)
+                {
+                    response.SampleDataHTML = SampleDataHTML(worksheet, worksheetStart, worksheetEnd);
+                    response.SampleDataList = SampleDataList(worksheet, worksheetStart, worksheetEnd);
+                }
                 ep.Dispose();
             }
             return response;
+        }
+
+        private List<string> SampleDataList(ExcelWorksheet worksheet, ExcelCellAddress worksheetStart, ExcelCellAddress worksheetEnd)
+        {
+            List<string> sampleDataList = new List<string>();
+
+            for (int rowCount = worksheetStart.Row; rowCount < worksheetEnd.Column; rowCount++)
+            {
+                var row = worksheet.Row(rowCount + 1).ToJson();
+                sampleDataList.Add(row);
+            }
+            return sampleDataList;
+        }
+
+        private String SampleDataHTML(ExcelWorksheet worksheet, ExcelCellAddress worksheetStart, ExcelCellAddress worksheetEnd)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.Append("<table border==\"1\"><tr>");
+            for (int rowCount = worksheetStart.Row; rowCount < worksheetEnd.Column; rowCount++)
+            {
+                stringBuilder.Append("<tr>");
+                for (int col = 0; col < worksheetEnd.Column; col++)
+                {
+                    var columnValue = worksheet.Cells[rowCount, col + 1].Value;
+                    stringBuilder.Append("'<td>'" + columnValue + "'</td>'");
+                }
+                stringBuilder.Append("<tr>");
+                stringBuilder.Append("</table>");
+            }
+            return stringBuilder.ToString();
         }
 
         [HttpPost]
@@ -173,32 +208,53 @@ namespace Yaxie.Common.Endpoints
         /// </summary>
         /// <param name="importWizardRow"></param>
         /// <returns></returns>
-        [HttpPost]
-        public ImportWizardHistoryRow ExcelImport(ImportWizardRow importWizardRow)
+        public List<int> ExcelImport(int importWizardId)
         {
-            int columnErrors = 0;
-            int rowErrors = 0;
+            List<int> importWizardHistoryList = new List<int>();
             List<string> errorList = new List<string>();
             ImportWizardHistoryRow importWizardHistoryRow = new ImportWizardHistoryRow();
+            using var connection = SqlConnections.NewFor<ImportWizardHistoryRow>();
+            ImportWizardRow importWizardRow = connection.TryById<ImportWizardRow>(importWizardId);
+            if (importWizardRow.HasErrors)
+            {
+                errorList.Add("The wizard id " + importWizardId.ToString() + " does not exist.");
+                importWizardHistoryRow.ErrorList = errorList.ToJson();
+                int importWizardHistoryId = Convert.ToInt32(connection.InsertAndGetID(importWizardHistoryRow));
+                importWizardHistoryList.Add(importWizardHistoryId);
+                return importWizardHistoryList;
+            }
+            if (importWizardRow.ImportFileList.IsEmptyOrNull())
+            {
+                errorList.Add("There are no files to import.");
+                importWizardHistoryRow.ErrorList = errorList.ToJson();
+                int importWizardHistoryId = Convert.ToInt32(connection.InsertAndGetID(importWizardHistoryRow));
+                importWizardHistoryList.Add(importWizardHistoryId);
+                return importWizardHistoryList;
+            }
             string fileName;
             var fileNameList = JsonConvert.DeserializeObject<List<FileNames>>(importWizardRow.ImportFileList.ToString(), JsonSettings.Tolerant);
-            foreach (var item in fileNameList)
+            foreach (var fileNamePair in fileNameList)
             {
-                fileName = item.FileName;
+                fileName = fileNamePair.FileName;
                 Check.NotNullOrWhiteSpace("fileName", fileName);
                 UploadHelper.CheckFileNameSecurity(fileName);
-                importWizardHistoryRow = ExcelImportFile(importWizardRow, fileName);
+                importWizardHistoryRow = new ImportWizardHistoryRow
+                {
+                    RunDateTime = DateTime.Now,
+                    OriginalFileName = fileNamePair.OriginalName,
+                    TempFileName = fileNamePair.FileName,
+                    ImportWizardId = importWizardRow.ImportWizardId,
+                    RowsInserted = 0,
+                    RowsUpdated = 0
+                };
+                importWizardHistoryRow = ExcelImportFile(importWizardRow, importWizardHistoryRow);
+                int importWizardHistoryId = (int)connection.InsertAndGetID(importWizardHistoryRow);
+                importWizardHistoryList.Add(importWizardHistoryId);               
+                errorList.Clear();
+                importWizardRow.LastRunDate = importWizardHistoryRow.RunDateTime;
+                connection.UpdateById<ImportWizardRow>(importWizardRow);
             }
-            if (columnErrors <= importWizardRow.ColumnErrorCount && rowErrors <= importWizardRow.RowErrorCount)
-            {
-                errorList.Add("Records Inserted : " + importWizardHistoryRow.RowsInserted.ToString());
-                errorList.Add("Records Updated  : " + importWizardHistoryRow.RowsUpdated.ToString());
-                importWizardHistoryRow.Results = errorList.ToJson();
-            }
-            importWizardHistoryRow.ErrorList = JsonConvert.SerializeObject(errorList); // ToDo better save and presentation
-            importWizardRow.LastRunDate = DateTime.Now;
-            
-            return importWizardHistoryRow;
+            return importWizardHistoryList;
         }
 
         /// <summary>
@@ -208,26 +264,20 @@ namespace Yaxie.Common.Endpoints
         /// <param name="importWizardRow"></param>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        private ImportWizardHistoryRow ExcelImportFile(ImportWizardRow importWizardRow, string fileName)
+        private ImportWizardHistoryRow ExcelImportFile(ImportWizardRow importWizardRow, ImportWizardHistoryRow importWizardHistoryRow)
         {
             int columnErrors = 0;
             int rowErrors = 0;
-            ImportWizardHistoryRow importWizardHistoryRow = new ImportWizardHistoryRow
-            {
-                RunDateTime = DateTime.Now,
-                OriginalFileName = "",
-                TempFileName = fileName,
-                ImportWizardId = importWizardRow.ImportWizardId
-            };
+            
             List<string> errorList = new List<string>();
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             ExcelPackage ep = new ExcelPackage();
-            using (var fs = new FileStream(UploadHelper.DbFilePath(fileName), FileMode.Open, FileAccess.Read))
+            using (var fs = new FileStream(UploadHelper.DbFilePath(importWizardHistoryRow.TempFileName), FileMode.Open, FileAccess.Read))
                 ep.Load(fs);
             if (ep.Workbook.Worksheets.Count == 0)
             {
-                errorList.Add(fileName + " contains no worksheets.");
-                importWizardHistoryRow.ErrorList = errorList.ToString();
+                errorList.Add(importWizardHistoryRow.TempFileName + " contains no worksheets.");
+                importWizardHistoryRow.ErrorList = errorList.ToJson();
                 return importWizardHistoryRow;
             }
             int importStartRow = importWizardRow.StartAtRow == null ? 2 : Convert.ToInt32(importWizardRow.StartAtRow);
@@ -237,6 +287,7 @@ namespace Yaxie.Common.Endpoints
             var worksheetEnd = worksheet.Dimension.End;
             var worksheetHeaders = worksheet.Cells[worksheetStart.Row, worksheetStart.Column, 1, worksheetEnd.Column];
             string entityName = importWizardRow.TargetDatabase;
+
             Type rowType = Type.GetType(entityName);
             if (rowType == null)
             {
@@ -246,6 +297,8 @@ namespace Yaxie.Common.Endpoints
             }
             Row currentRow = GetInstance(rowType);
             var connectionKey = currentRow.GetType().GetCustomAttribute<ConnectionKeyAttribute>().Value;
+            var tableName = currentRow.Table;
+            
             if (connectionKey == null)
             {
                 errorList.Add("Row type " + entityName + " connection key not found.");
@@ -256,6 +309,7 @@ namespace Yaxie.Common.Endpoints
             bool primaryKeyIsIdentity = false;
             string primaryKeyColumnAlias = string.Empty;
             int primaryKeyColumnNumber = 0;
+            string primaryKeyName = string.Empty;
             int primaryKeyValue = 0;
             bool primaryKeyIsInList = false;
             if (primaryKeyFields == null)
@@ -318,23 +372,38 @@ namespace Yaxie.Common.Endpoints
 
                         using (var connection = SqlConnections.NewByKey(connectionKey))
                         {
+                            var listHandler = DefaultHandlerFactory.ListHandlerFor(rowType);
+                            var listRequest = DefaultHandlerFactory.ListRequestFor(rowType);
                             var retrieveHandler = DefaultHandlerFactory.RetrieveHandlerFor(rowType);
                             var retrieveRequest = DefaultHandlerFactory.RetrieveRequestFor(rowType);
                             var saveHandler = DefaultHandlerFactory.SaveHandlerFor(rowType);
+                            var saveRequest = DefaultHandlerFactory.SaveRequestFor(rowType);
                             currentRow = currentRow.CreateNew();
                             if (primaryKeyIsInList)
                             {
                                 primaryKeyValue = Convert.ToInt32(worksheet.Cells[row, importKeyColumn, row, importKeyColumn].Value);
-                                retrieveRequest.EntityId = primaryKeyValue;
+                                var criteria = new Criteria(primaryKeyColumnAlias) == new ValueCriteria(primaryKeyValue);
+                                SqlQuery sqlQuery = new SqlQuery();
+                                sqlQuery.Select("*");
+                                sqlQuery.From(tableName);
+                                sqlQuery.Where(criteria);
+                                var results = connection.Query(sqlQuery);
+                                if (results.Count() > 0)
                                 {
-                                    var retrieveResponse = retrieveHandler.Process(connection, retrieveRequest);
-                                    if (retrieveResponse != null)
-                                    {
-                                        currentRow = (Row)retrieveResponse.Entity;
-                                        currentRow.TrackWithChecks = true;
-                                        primaryKeyFound = true;
-                                    }
+                                    currentRow = (Row)results;
+                                    currentRow.TrackWithChecks = true;
+                                    primaryKeyFound = true;
                                 }
+                                //retrieveRequest.EntityId = primaryKeyValue;
+                                //{
+                                //    var retrieveResponse = retrieveHandler.Process(connection, retrieveRequest);
+                                //    if (retrieveResponse != null)
+                                //    {
+                                //        currentRow = (Row)retrieveResponse.Entity;
+                                //        currentRow.TrackWithChecks = true;
+                                //        primaryKeyFound = true;
+                                //    }
+                                //}
                             }
                             var importedRow = worksheet.Cells[row, worksheetStart.Column, 1, worksheetEnd.Column];
                             for (int i = 0; i < importedHeaders.Count(); i++)
@@ -383,19 +452,19 @@ namespace Yaxie.Common.Endpoints
                                     }
                                 }
                             }
-                            var saveRequest = DefaultHandlerFactory.SaveRequestFor(rowType);
                             saveRequest.Entity = currentRow;
-                            IUnitOfWork unitOfWork = new UnitOfWork(connection);
+                            Serenity.Data.IUnitOfWork unitOfWork = new Serenity.Data.UnitOfWork(connection);
                             if (primaryKeyFound)
                             {
                                 saveRequest.EntityId = primaryKeyValue;
                                 var saveResponse = saveHandler.Process(unitOfWork, saveRequest, SaveRequestType.Update);
-                                //response.Updated += 1;
+                                importWizardHistoryRow.RowsUpdated += 1;
                             }
                             else
                             {
+                                var primaryKey = unitOfWork.Connection.InsertAndGetID(currentRow);
                                 var saveResponse = saveHandler.Process(unitOfWork, saveRequest, SaveRequestType.Create);
-                                //response.Inserted += 1;
+                                importWizardHistoryRow.RowsInserted += 1;
                             }
                         }
                     }
@@ -407,13 +476,8 @@ namespace Yaxie.Common.Endpoints
                 }
             }
             ep.Dispose();
-            using (var connection = SqlConnections.NewByKey("Default"))
-            {
-                
-
-                connection.Insert<ImportWizardHistoryRow>(importWizardHistoryRow);
-            }
-                return importWizardHistoryRow;
+            importWizardHistoryRow.ErrorList = errorList.ToJson();
+            return importWizardHistoryRow;
         }
 
         public static T ChangeType<T>(object value)
@@ -449,6 +513,21 @@ namespace Yaxie.Common.Endpoints
         private static Row GetInstance(Type rowType)
         {
             return (Row)Activator.CreateInstance(rowType);
+        }
+
+        private static object GetRepository(string entityName)
+        {
+            var repositoryName = entityName.Replace("Entities", "Repositories");
+            repositoryName = repositoryName.Replace("Row", "Repository");
+            Type respositorytype = Assembly.GetExecutingAssembly().GetType(repositoryName);
+            object instance = Activator.CreateInstance(respositorytype);
+            // Optional generic implementation
+            //List<MethodInfo> repositoryMethods = respositorytype.GetMethods().ToList();
+            //string methodName = "Retrieve";
+            //MethodInfo repositoryMethod = respositorytype.GetMethod(methodName);
+            //ListRequest listRequest = new ListRequest();
+            //repositoryMethod.Invoke(instance, new object[0]);
+            return instance;
         }
 
         /// <summary>

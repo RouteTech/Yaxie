@@ -14,7 +14,6 @@ namespace Yaxie.Common.Forms
     public class ImportWizardHistoryForm
     {
         public Int32 ImportWizardId { get; set; }
-        public DateTime RunDateTime { get; set; }
         public String OriginalFileName { get; set; }
         public String TempFileName { get; set; }
         [TextAreaEditor(Rows = 5)]

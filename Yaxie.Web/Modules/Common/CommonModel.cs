@@ -13,6 +13,14 @@ namespace Yaxie.Common
     {
         public List<UploadFileNames> ImportFileList { get; set; }
         public string FileName { get; set; }
+        public int SampleRecords { get; set; }
+    }
+
+    public class GetExcelColumnListResponse : ServiceResponse
+    {
+        public string SampleDataHTML;
+        public List<string> ExcelColumnList { get; set; }
+        public List<string> SampleDataList { get; set; }
     }
 
     public class GetTableHeaderListRequest : ListRequest
@@ -35,7 +43,7 @@ namespace Yaxie.Common
 
     public class ImportWizardBulkActionResponse : ServiceResponse
     {
-        public List<ImportWizardRow> ImportWizardList { get; set; }
+        public List<int> ImportWizardHistoryList { get; set; }
         public List<string> MessageList { get; set; }
 
     }

@@ -29,7 +29,8 @@ namespace Yaxie.Common.Entities
             set { Fields.ImportWizardId[this] = value; }
         }
 
-        [DisplayName("Run Date Time"), NotNull]
+        [DisplayName("Run Date Time")]
+        [Insertable(false), Updatable(false)]
         public DateTime? RunDateTime
         {
             get { return Fields.RunDateTime[this]; }
@@ -58,6 +59,7 @@ namespace Yaxie.Common.Entities
         }
 
         [DisplayName("Results")]
+        [StaticTextBlock(IsHtml = true)]
         public String Results
         {
             get { return Fields.Results[this]; }
@@ -65,12 +67,14 @@ namespace Yaxie.Common.Entities
         }
 
         [DisplayName("Rows Inserted")]
+        [IntegerEditor,DefaultValue(0)]
         public Int32? RowsInserted
         {
             get { return Fields.RowsInserted[this]; }
             set { Fields.RowsInserted[this] = value; }
         }
         [DisplayName("Rows Updated")]
+        [IntegerEditor, DefaultValue(0)]
         public Int32? RowsUpdated
         {
             get { return Fields.RowsUpdated[this]; }

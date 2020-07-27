@@ -17,7 +17,9 @@ namespace Yaxie.Common.Columns
         public Int32 ImportWizardHistoryId { get; set; }
         [EditLink]
         public String ImportWizardDescription { get; set; }
+        [DateTimeEditor, QuickFilter]
         public DateTime RunDateTime { get; set; }
-        public String OriginalFileName { get; set; }
+        public Int32 RowsInserted { get; set; }
+        public Int32 RowsUpdated { get; set; }
     }
 }

@@ -24,7 +24,6 @@ namespace Yaxie.Common {
             super();
             this.historyGrid = new ImportWizardImportWizardHistoryGrid(this.byId("HistoryGrid"));
             this.historyGrid.element.flexHeightOnly(1);
-
             $('<a class="inplace-button inplace-action"><b><i class="fa fa-magic text-red"></i></b></a>')
                 .attr("title", "Match Excel Columns to Table Columns")
                 .insertBefore(this.form.FieldMatchDisplay.element)
@@ -33,10 +32,12 @@ namespace Yaxie.Common {
                     var excelColumnList = [];
                     var dropColumnList = [];
                     var tableColumnList = [];
+                    var sampleDataList = [];
                     Yaxie.Common.ImportWizardService.GetExcelColumnList({
-                        ImportFileList: this.form.ImportFileList.value
+                        ImportFileList: this.form.ImportFileList.value,
                     }, response => {
-                        excelColumnList = response.Entities;
+                            excelColumnList = response.ExcelColumnList;
+                            sampleDataList = response.SampleDataList;
                     },
                         {
                             async: false
@@ -53,7 +54,7 @@ namespace Yaxie.Common {
                             async: false
                         });
 
-                    var dialog = new ImportWizardFieldMatchDialog(excelColumnList, tableColumnList);
+                    var dialog = new ImportWizardFieldMatchDialog(excelColumnList, tableColumnList, sampleDataList);
 
                     dialog.element.on('dialogclose', () => {
                         var dropColumnElement = document.getElementById('dropcolumns').getElementsByTagName("li");
@@ -81,11 +82,12 @@ namespace Yaxie.Common {
                     if (excelColumnList && excelColumnList.length > 0) {
                         dialog.dialogOpen();
                     }
-                });
+                });            
 
             this.tabs.on('tabsactivate', (e, i) => {
                 this.arrange();
             });
+
             this.byId('NoteList').closest('.field').hide().end().appendTo(this.byId('TabNotes'));
             DialogUtils.pendingChangesConfirmation(this.element, () => this.getSaveState() != this.loadedState);
             this.tabs.bind('tabsactivate', () => this.arrange());
@@ -97,22 +99,27 @@ namespace Yaxie.Common {
             buttons.push({
                 title: 'Execute Import',
                 cssClass: 'send-button',
-                onClick: () => {
-                    if (!this.form.ImportFileList) {
-                        Q.alert("You must enter a valid file name before you can import it.")
-                    }
-                    Common.ImportWizardService.ExcelImport({
-                        ImportWizardId: this.getWizardID()
-                    }, response => {
-                        this.dialogClose();
+                onClick: (e) => {                 
+                    this.save((response: Serenity.SaveResponse) => {
                     });
+                    e.preventDefault();
+                    var batch = [];
+                    batch.push(this.getWizardID());
+                    var action = new ImportWizardBulkAction();
+                    action.done = () => this.dialogClose();
+                    action.execute(batch);                   
                 }
             });
+            //Common.ImportWizardService.ExcelImport({
+            //    ImportWizardId: this.getWizardID()
+            //}, response => {
+            //    this.dialogClose();
+            //});
             return buttons;
         }
 
         protected getWizardID(): number {
-            return this.form.ImportWizardId.value;
+            return this.entity.ImportWizardId;
         }
 
         getSaveState() {

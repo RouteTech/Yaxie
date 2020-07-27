@@ -14,10 +14,10 @@ namespace Yaxie.Common
         public excelColumnList = [];
         public tableColumnList = [];
         public dropColumnList = [];
-
+        public sampleDataList = [];
         public matchList = [];
 
-        constructor(ExcelColumnList, TableColumnList)
+        constructor(ExcelColumnList, TableColumnList, SampleDataList)
         {
             super();
 
@@ -26,13 +26,32 @@ namespace Yaxie.Common
                 return;
             }
             this.tableColumnList = TableColumnList;            
-
+            this.sampleDataList = SampleDataList;
         }        
 
         protected onDialogOpen()
         {
             super.onDialogOpen();                      
-
+           
+            var sampleDataGridElement = document.getElementById("GridDiv");
+            if (this.sampleDataList && this.sampleDataList.length > 0) {
+                var tableHeader = document.createElement('thead');
+                var thead = "";
+                for (var i = 0; i < this.excelColumnList.length; i++) {
+                    thead += this.excelColumnList[i];
+                }
+                tableHeader.append(thead);
+                var tbody = "";
+                var tableBody = document.createElement('tbody');
+                for (var i = 0; i < length; i++) {
+                    tbody += this.sampleDataList[i];
+                }
+                tableBody.append(tbody);
+                var tableFooter = document.createElement('tfoot');
+                sampleDataGridElement.appendChild(tableHeader);
+                sampleDataGridElement.appendChild(tableBody);
+                sampleDataGridElement.appendChild(tableFooter);
+            }            
             var excelColumns = document.getElementById("excelcolumns");
             for (var i = 0; i < this.excelColumnList.length; i++)
             {

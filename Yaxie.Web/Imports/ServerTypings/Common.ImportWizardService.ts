@@ -9,9 +9,8 @@
         export declare function List(request: Serenity.ListRequest, onSuccess?: (response: Serenity.ListResponse<ImportWizardRow>) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
         export declare function ImportWizardBulkAction(request: ImportWizardBulkActionRequest, onSuccess?: (response: ImportWizardBulkActionResponse) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
         export declare function GetTableHeaders(request: GetTableHeaderListRequest, onSuccess?: (response: Serenity.ListResponse<TableFieldInfo>) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
-        export declare function GetExcelColumnList(request: GetExcelColumnListRequest, onSuccess?: (response: Serenity.ListResponse<string>) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
+        export declare function GetExcelColumnList(request: GetExcelColumnListRequest, onSuccess?: (response: GetExcelColumnListResponse) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
         export declare function SerializeList(request: SerializeListRequest, onSuccess?: (response: SerializeListResponse) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
-        export declare function ExcelImport(request: ImportWizardRow, onSuccess?: (response: ImportWizardHistoryRow) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
 
         export declare const enum Methods {
             Create = "Common/ImportWizard/Create",
@@ -22,8 +21,7 @@
             ImportWizardBulkAction = "Common/ImportWizard/ImportWizardBulkAction",
             GetTableHeaders = "Common/ImportWizard/GetTableHeaders",
             GetExcelColumnList = "Common/ImportWizard/GetExcelColumnList",
-            SerializeList = "Common/ImportWizard/SerializeList",
-            ExcelImport = "Common/ImportWizard/ExcelImport"
+            SerializeList = "Common/ImportWizard/SerializeList"
         }
 
         [
@@ -35,8 +33,7 @@
             'ImportWizardBulkAction', 
             'GetTableHeaders', 
             'GetExcelColumnList', 
-            'SerializeList', 
-            'ExcelImport'
+            'SerializeList'
         ].forEach(x => {
             (<any>ImportWizardService)[x] = function (r, s, o) {
                 return Q.serviceRequest(baseUrl + '/' + x, r, s, o);

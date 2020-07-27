@@ -1,7 +1,6 @@
 ﻿namespace Yaxie.Common {
     export interface ImportWizardHistoryForm {
         ImportWizardId: Serenity.IntegerEditor;
-        RunDateTime: Serenity.DateEditor;
         OriginalFileName: Serenity.StringEditor;
         TempFileName: Serenity.StringEditor;
         ErrorList: Serenity.TextAreaEditor;
@@ -22,17 +21,15 @@
 
                 var s = Serenity;
                 var w0 = s.IntegerEditor;
-                var w1 = s.DateEditor;
-                var w2 = s.StringEditor;
-                var w3 = s.TextAreaEditor;
+                var w1 = s.StringEditor;
+                var w2 = s.TextAreaEditor;
 
                 Q.initFormType(ImportWizardHistoryForm, [
                     'ImportWizardId', w0,
-                    'RunDateTime', w1,
-                    'OriginalFileName', w2,
-                    'TempFileName', w2,
-                    'ErrorList', w3,
-                    'Results', w3,
+                    'OriginalFileName', w1,
+                    'TempFileName', w1,
+                    'ErrorList', w2,
+                    'Results', w2,
                     'RowsInserted', w0,
                     'RowsUpdated', w0
                 ]);

@@ -1,6 +1,6 @@
 ﻿namespace Yaxie.Common {
     export interface ImportWizardBulkActionResponse extends Serenity.ServiceResponse {
-        ImportWizardList?: ImportWizardRow[];
+        ImportWizardHistoryList?: number[];
         MessageList?: string[];
     }
 }
